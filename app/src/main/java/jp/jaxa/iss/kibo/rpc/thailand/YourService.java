@@ -206,4 +206,24 @@ public class YourService extends KiboRpcService {
     public void setTextQRCode(String textQRCode) {
         this.textQRCode = textQRCode;
     }
+
+    private Integer Who_is_Close(List<Integer> selectClose){
+        int size = list.size();
+        if(size>1){
+            Integer min = 9;
+            Integer pick = null;
+            for(Integer d:list) {
+               Integer now= selectClose.indexOf(d);
+               if(now<=min){
+                   min=now;
+                   pick=d;
+               }
+            }
+            return pick;
+        }
+        return list.get(0);
+    }
+    private void wayNextfromTarget1(){
+        
+    }
 }
