@@ -15,7 +15,13 @@ public class YourService extends KiboRpcService {
     private int imageID = 1;
     private String textQRCode;
     private List<Integer> activeTargets;
-
+    private Integer [] fristclose ={2,1,5,6,4,3};
+    private Integer [] target1close ={6,2,5,4,3};
+    private Integer [] target2close ={5,6,1,4,3};
+    private Integer [] target3close ={4,5,6,2,1};
+    private Integer [] target4close ={3,5,6,2,1};
+    private Integer [] target5close ={6,4,2,1,3};
+    private Integer [] target6close ={1,5,2,4,3};
     @Override
     protected void runPlan1(){
         api.startMission();
