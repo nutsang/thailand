@@ -240,7 +240,7 @@ public class YourService extends KiboRpcService {
                 targetPoint6();
                 break;
             case 7:
-
+                qrCodePoint();
                 break;
             default:
                 return;
