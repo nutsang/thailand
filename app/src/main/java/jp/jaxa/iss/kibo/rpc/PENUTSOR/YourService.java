@@ -14,6 +14,7 @@ import org.opencv.objdetect.QRCodeDetector;
 public class YourService extends KiboRpcService {
     private int imageID = 1;
     private String textQRCode;
+    private int Live=0;
     private List<Integer> activeTargets;
     private Integer [] fristclose ={2,1,5,6,4,3};
     private Integer [] target1close ={6,2,5,4,3};
@@ -31,30 +32,21 @@ public class YourService extends KiboRpcService {
                 break;
             }else{
                 activeTargets = api.getActiveTargets();
-                for (int id : activeTargets) {
-                    switch(id){
-                        case 1:
-                            targetPoint1();
-                            break;
-                        case 2:
-                            targetPoint2();
-                            break;
-                        case 3:
-                            targetPoint3();
-                            break;
-                        case 4:
-                            targetPoint4();
-                            break;
-                        case 5:
-                            targetPoint5();
-                            break;
-                        case 6:
-                            targetPoint6();
-                            break;
-                    }
+                switch(Live){
+                    case 0:break;
+                    case 1:break;
+                    case 2:break;
+                    case 3:break;
+                    case 4:break;
+                    case 5:break;
+                    case 6:break;
+                    case 7:break;
+                    case 8:break;
+                    default:break;
                 }
             }
         }
+        
         qrCodePoint();
         api.reportMissionCompletion(reportQRCode());
     }
