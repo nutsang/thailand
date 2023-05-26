@@ -223,7 +223,31 @@ public class YourService extends KiboRpcService {
         }
         return list.get(0);
     }
-    private void wayNextfromTarget1(){
-        
+    private void wayNextfromDock(Integer d){
+        switch(d){
+            case 1:
+
+                break;
+            case 2:
+                targetPoint2();
+                break;
+            case 3:
+
+                break;
+            case 4:
+                targetPoint4();
+                break;
+            case 5:
+                targetPoint5();
+                break;
+            case 6:
+                targetPoint6();
+                break;
+            case 7:
+
+                break;
+            default:
+                return;
+        }
     }
 }
