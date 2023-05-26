@@ -1,4 +1,4 @@
-package jp.jaxa.iss.kibo.rpc.thailand;
+package jp.jaxa.iss.kibo.rpc.PENUTSOR;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -25,8 +25,6 @@ public class YourService extends KiboRpcService {
     @Override
     protected void runPlan1(){
         api.startMission();
-
-        centerPoint();
         while (true){
             List<Long> timeRemaining = api.getTimeRemaining();
             if (timeRemaining.get(1) < 60000) {
@@ -34,29 +32,25 @@ public class YourService extends KiboRpcService {
             }else{
                 activeTargets = api.getActiveTargets();
                 for (int id : activeTargets) {
-                    if (timeRemaining.get(0) < 5000) {
-                        break;
-                    }else{
-                        switch(id){
-                            case 1:
-                                targetPoint1();
-                                break;
-                            case 2:
-                                targetPoint2();
-                                break;
-                            case 3:
-                                targetPoint3();
-                                break;
-                            case 4:
-                                targetPoint4();
-                                break;
-                            case 5:
-                                targetPoint5();
-                                break;
-                            case 6:
-                                targetPoint6();
-                                break;
-                        }
+                    switch(id){
+                        case 1:
+                            targetPoint1();
+                            break;
+                        case 2:
+                            targetPoint2();
+                            break;
+                        case 3:
+                            targetPoint3();
+                            break;
+                        case 4:
+                            targetPoint4();
+                            break;
+                        case 5:
+                            targetPoint5();
+                            break;
+                        case 6:
+                            targetPoint6();
+                            break;
                     }
                 }
             }
@@ -64,7 +58,6 @@ public class YourService extends KiboRpcService {
         qrCodePoint();
         api.reportMissionCompletion(reportQRCode());
     }
-
     @Override
     protected void runPlan2(){
        // write your plan 2 here
@@ -81,7 +74,9 @@ public class YourService extends KiboRpcService {
     }
 
     private void targetPoint1(){
-        moveTo(11.2746d-0.0651d-0.002d, -10.0d+0.003d, 5.3625d+0.1111d, 0f, 0f, -0.707f, 0.707f,false);
+        //y==-10.0d+0.003d 
+        //optimize  y==-9.92284d
+        moveTo(11.2746d-0.0651d-0.002d, -9.92284d, 5.3625d+0.1111d, 0f, 0f, -0.707f, 0.707f,false);
         destroyTarget(1);
         centerPoint();
     }
@@ -226,13 +221,14 @@ public class YourService extends KiboRpcService {
     private void wayNextfromDock(Integer d){
         switch(d){
             case 1:
-
+                moveTo(11.2746d, -8.7314d+0.01d, 5.2988d, 0f, 0f, -0.707f, 0.707f, false);
+                targetPoint1();
                 break;
             case 2:
                 targetPoint2();
                 break;
             case 3:
-
+                
                 break;
             case 4:
                 targetPoint4();
@@ -250,4 +246,18 @@ public class YourService extends KiboRpcService {
                 return;
         }
     }
+    private void doLaserTargetSnapshot(int target_id,boolean takeImage){
+        api.laserControl(true);
+        if(takeImage==true){
+            try {
+                Thread.sleep(2000);
+                SaveImage(Capture(), "tar" + target_id + "laser");
+                Thread.sleep(1000);
+            } catch (InterruptedException a) {
+                a.printStackTrace();
+            }
+        }
+        api.takeTargetSnapshot(target_id);
+    }
 }
+    
