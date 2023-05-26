@@ -33,7 +33,9 @@ public class YourService extends KiboRpcService {
             }else{
                 activeTargets = api.getActiveTargets();
                 switch(Live){
-                    case 0:break;
+                    case 0:
+                        wayNextfromDock(Who_is_Close(new List<Integer>(fristclose)));
+                        break;
                     case 1:break;
                     case 2:break;
                     case 3:break;
@@ -44,6 +46,7 @@ public class YourService extends KiboRpcService {
                     case 8:break;
                     default:break;
                 }
+                break;
             }
         }
         
@@ -220,7 +223,7 @@ public class YourService extends KiboRpcService {
                 targetPoint2();
                 break;
             case 3:
-                
+                moveTo(10.71d, -8.2826d-0.05d, 4.6725d+0.1d, 0 ,0.707f ,0f ,0.707f, false);
                 break;
             case 4:
                 targetPoint4();
@@ -238,7 +241,7 @@ public class YourService extends KiboRpcService {
                 return;
         }
     }
-    private void doLaserTargetSnapshot(int target_id,boolean takeImage){
+    private void doLaserTakePhoto(int target_id,boolean takeImage){
         api.laserControl(true);
         if(takeImage==true){
             try {
