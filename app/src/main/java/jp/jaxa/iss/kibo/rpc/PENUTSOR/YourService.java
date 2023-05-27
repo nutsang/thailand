@@ -5,8 +5,6 @@ import android.util.Log;
 import jp.jaxa.iss.kibo.rpc.api.KiboRpcService;
 import java.util.List;
 import java.util.Arrays;
-import gov.nasa.arc.astrobee.Result;
-import gov.nasa.arc.astrobee.android.gs.MessageType;
 import gov.nasa.arc.astrobee.types.Point;
 import gov.nasa.arc.astrobee.types.Quaternion;
 import org.opencv.core.Mat;
@@ -35,7 +33,7 @@ public class YourService extends KiboRpcService {
                 activeTargets = api.getActiveTargets();
                 switch(Live){
                     case 0:
-                        wayNextfromDock(Who_is_Close(Arrays.asList(fristclose)));
+                        wayNextfromDock(getCloserTarget(Arrays.asList(fristclose)));
                         break;
                     case 1:break;
                     case 2:break;
@@ -72,7 +70,7 @@ public class YourService extends KiboRpcService {
     private void targetPoint1(){
         //y==-10.0d+0.003d 
         //optimize  y==-9.92284d
-        moveTo(11.2746d-0.0651d-0.002d, -9.92284d, 5.3625d+0.1111d, 0f, 0f, -0.707f, 0.707f,false);
+        moveTo(11.2746d-0.0651d-0.002d, -9.92284d+0.02d, 5.3625d+0.1111d, 0f, 0f, -0.707f, 0.707f,false);
         doLaserTakePhoto(1,true);
         centerPoint();
     }
@@ -119,9 +117,15 @@ public class YourService extends KiboRpcService {
     }
 
     private void readQRCode(){
+        Mat image = new Mat();
         api.flashlightControlFront(0.05f);
+        try{
+            Thread.sleep(2000);
+            image = api.getMatNavCam();
+        }catch (InterruptedException a){
+            a.printStackTrace();
+        }
         api.flashlightControlFront(0.0f);
-        Mat image = api.getMatNavCam();
         QRCodeDetector qrCodeDetector = new QRCodeDetector();
         setTextQRCode(qrCodeDetector.detectAndDecode(image));
     }
@@ -204,26 +208,26 @@ public class YourService extends KiboRpcService {
         this.textQRCode = textQRCode;
     }
 
-    private Integer Who_is_Close(List<Integer> selectClose){
+    private Integer getCloserTarget(List<Integer> choiceTarget){
         int size = activeTargets.size();
         if(size>1){
             Integer min = 9;
-            Integer pick = null;
+            Integer choose = null;
             for(Integer d:activeTargets) {
-               Integer now= selectClose.indexOf(d);
+               Integer now= choiceTarget.indexOf(d);
                if(now<=min){
                    min=now;
-                   pick=d;
+                   choose=d;
                }
             }
-            return pick;
+            return choose;
         }
         return activeTargets.get(0);
     }
     private void wayNextfromDock(Integer d){
         switch(d){
             case 1:
-                moveTo(11.2746d, -8.7314d+0.01d, 5.2988d, 0f, 0f, -0.707f, 0.707f, false);
+                moveTo(11.2746d, -9.6929d+0.1d, 5.2988d, 0f, 0f, -0.707f, 0.707f, false);
                 targetPoint1();
                 break;
             case 2:
