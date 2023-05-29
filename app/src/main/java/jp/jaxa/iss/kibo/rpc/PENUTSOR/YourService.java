@@ -14,6 +14,7 @@ public class YourService extends KiboRpcService {
     private int imageID = 1;
     private String textQRCode;
     private int live=0;
+    private boolean qrcodeREAD = false;
     private boolean loop =true;
     private Integer [] startclose ={2,1,5,6,4,7,3};// number 7 คือ QRCODE
     private Integer [] target1close ={6,2,7,5,4,3};
@@ -40,7 +41,10 @@ public class YourService extends KiboRpcService {
                         onTarget1(getCloserTarget(activeTargets,Arrays.asList(target1close)));
                         loop=false;
                         break;
-                    case 2:break;
+                    case 2:
+                        onTarget2(getCloserTarget(activeTargets,Arrays.asList(target2close)));
+                        loop=false;
+                        break;
                     case 3:break;
                     case 4:break;
                     case 5:break;
@@ -51,8 +55,6 @@ public class YourService extends KiboRpcService {
                 }
             }
         }
-        
-        qrCodePoint();
         api.reportMissionCompletion(reportQRCode());
     }
     @Override
@@ -75,6 +77,7 @@ public class YourService extends KiboRpcService {
         //optimize  y==-9.92284d+0.14d ระยะทางสั้นขึ้น
         moveTo(11.2746d-0.0651d-0.002d, -9.92284d+0.14d, 5.3625d+0.1111d, 0f, 0f, -0.707f, 0.707f,false);
         destroyTarget(1);
+        live=1;
     }
 
     private void targetPoint2(){
@@ -82,6 +85,7 @@ public class YourService extends KiboRpcService {
         //optimize  y==-4.48d+0.04d ระยะทางสั้นขึ้น
         moveTo(10.612d-0.1302d-0.028d, -9.085172d-0.0572d-0.054d, 4.48d+0.04d, 0.5f ,0.5f ,-0.5f ,0.5f,false);
         destroyTarget(2);
+        live=2;
     }
 
     private void targetPoint3(){
@@ -89,31 +93,38 @@ public class YourService extends KiboRpcService {
         //optimize  y==-4.48d+0.04d ระยะทางสั้นขึ้น
         moveTo(10.71d+0.00413d, -7.7d-0.0572d-0.0107d, 4.32d+0.04d, 0f, 0.707f, 0f, 0.707f, false);
         destroyTarget(3);
+        live=3;
     }
 
     private void targetPoint4(){
         //x==10.3d+0.04d จะเร็วและสั้นก็ต่อเมื่อ start
-        //x==10.51d ของตำแหน่งอื่นๆไม่ใช่ start จะเร็ว
-        moveTo(10.51d,-6.7185d+0.0572d+0.049d,5.1804d+(0.1111d/2d)-0.028d,0f,0f,-1f,0f, false);
+        //x==10.51d+0.02 ของตำแหน่งอื่นๆไม่ใช่ start จะเร็ว
+        moveTo(10.51d+0.02,-6.7185d+0.0572d+0.049d,5.1804d+(0.1111d/2d)-0.028d,0f,0f,-1f,0f, false);
         destroyTarget(4);
+        live=4;
     }
 
     private void targetPoint5(){
         moveTo(11.114d-0.1302d+0.065d,-7.9756d+0.0572d,5.57d-0.04d,-0.5f,-0.5f,-0.5f,0.5f, false);
         destroyTarget(5);
+        live=5;
     }
 
     private void targetPoint6(){
         moveTo(11.55d-0.06d ,-8.9929d-0.0572d+0.006d ,4.7818d+0.1111d+0.05d,0f ,0f ,0f ,1f, false);
         destroyTarget(6);
+        live=6;
     }
 
     private void qrCodePoint(){
         moveTo(11.381944d+0.1177d, -8.566172d-0.0422d, 4.33d+0.04d, 0.5f ,0.5f ,-0.5f ,0.5f, false);
         readQRCode();
+        qrcodeREAD=true;
+        live=7;
     }
     private void goalPoint(){
         moveTo(11.143d, -6.7607d, 4.9654d, 0f, 0f, -0.707f, 0.707f, false);
+        live=8;
     }
     private void destroyTarget(int targetId){
         api.laserControl(true);
@@ -227,11 +238,12 @@ public class YourService extends KiboRpcService {
     }
 
     private Integer getCloserTarget(List <Integer> activeTargets,List<Integer> choiceTarget){
-        int size = activeTargets.size();
-        if(size>1){
+        
+        if(activeTargets.size()>1){
             Integer min = 9;
             Integer choose = null;
-            activeTargets.add(7);// number 7 คือ QRCODE
+            if(!qrcodeREAD)
+                activeTargets.add(7);// number 7 คือ QRCODE
             for(Integer d:activeTargets) {
                Integer now= choiceTarget.indexOf(d);
                if(now<=min){
@@ -257,7 +269,7 @@ public class YourService extends KiboRpcService {
     private void startToTarget1(){moveTo(11.2746d, -9.92284d+0.3d, 4.8385d+0.1d, 0f, 0f, -0.707f, 0.707f, false);targetPoint1();}
     private void startToTarget2(){targetPoint2();}
     private void startToTarget3(){moveTo(10.71d, -8.2826d+0.1d, 4.6725d+0.3d, 0 ,0.707f ,0f ,0.707f, false);targetPoint3();}
-    private void startToTarget4(){moveTo(10.42d, -8.2826d+0.1d, 5.1804d, 0 ,0f ,-1f ,0f, false);moveTo(10.42d,-6.7185d+0.0572d+0.049d,5.1804d+(0.1111d/2d)-0.028d,0f,0f,-1f,0f, false);doLaserTakePhoto(4,true);}
+    private void startToTarget4(){moveTo(10.42d, -8.2826d+0.1d, 5.1804d, 0 ,0f ,-1f ,0f, false);moveTo(10.42d,-6.7185d+0.0572d+0.049d,5.1804d+(0.1111d/2d)-0.028d,0f,0f,-1f,0f, false);doLaserTakePhoto(4,true);live=4;}
     private void startToTarget5(){targetPoint5();}
     private void startToTarget6(){targetPoint6();}
     private void startToQRCode(){moveTo(10.9628+0.06d, -9.0734d, 4.48d, 0 ,0.707f ,0f ,0.707f, false);qrCodePoint();}
@@ -274,13 +286,37 @@ public class YourService extends KiboRpcService {
         }
     }
     private void target1ToTarget2(){targetPoint2();}
-    private void target1ToTarget3(){centerPoint();targetPoint3();}
+    private void target1ToTarget3(){startToTarget3();}
     private void target1ToTarget4(){targetPoint4();}
     private void target1ToTarget5(){targetPoint5();}
     private void target1ToTarget6(){targetPoint6();}
-    private void target1ToQRCode(){qrCodePoint();}
-    private void target1ToGoal(){moveTo(11.143d, -8.0635d, 5.1055-0.14d, 0f, 0f, -0.707f, 0.707f, false);goalPoint();}
+    private void target1ToQRCode(){startToQRCode();}
+    private void target1ToGoal(){moveTo(11.143d, -8.3826d-0.1d, 5.1055-0.14d, 0f, 0f, -0.707f, 0.707f, false);goalPoint();}//qr 6
+    
+    private void onTarget2(Integer select){
+        switch(select){
+            case 1:target2ToTarget1();break;
+            case 3:target2ToTarget3();break;
+            case 4:target2ToTarget4();break;
+            case 5:target2ToTarget5();break;
+            case 6:target2ToTarget6();break;
+            case 7:target2ToQRCode();break;
+            case 8:target2ToGoal();break;
+        }
+    }
+    private void target2ToTarget1(){targetPoint1();}
+    private void target2ToTarget3(){startToTarget3();}
+    private void target2ToTarget4(){moveTo(10.51d+0.02, -8.2826d+0.1d, 5.1804d, 0 ,0f ,-1f ,0f, false);targetPoint4();}
+    private void target2ToTarget5(){targetPoint5();}
+    private void target2ToTarget6(){targetPoint6();}
+    private void target2ToQRCode(){moveTo(10.9628d, -8.7314d, 4.6401d+0.3d,0.5f ,0.5f ,-0.5f ,0.5f, false);qrCodePoint();}//faster then startToQRCode(); 
+    private void target2ToGoal(){moveTo(10.8652d, -8.2826d, 4.6725d+0.1d, 0f, 0f, -0.707f, 0.707f, false);goalPoint();}
 
+    private void onTarget3(Integer select){
+        switch(select){
+            
+        }
+    }
 
 }
     
