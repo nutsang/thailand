@@ -1,4 +1,4 @@
-package jp.jaxa.iss.kibo.rpc.thailand;
+package jp.jaxa.iss.kibo.rpc.PENUTSOR;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
